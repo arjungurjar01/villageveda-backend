@@ -1,10 +1,18 @@
-import express from "express";
-const app = express();
+import app from "../src/index.js"
+import connectDB from "./db/mongodb.js";
 
-app.get("/", (req, res) => {
-  res.send("Test server running!");
-});
 
-app.listen(4000, () => {
-  console.log("Test server running at http://localhost:4000");
-});
+connectDB()
+.then(()=>{
+    app.on("error",(error)=>{
+        console.log("Error : ",error);
+        throw error;
+       })
+
+    app.listen(process.env.PORT || 3000 , ()=>{
+        console.log(`Server is running locally on port ${process.env.PORT || 3000}`) 
+    })
+})
+.catch((err)=>{
+    console.log("MongoDB connection failed !!",err)
+})

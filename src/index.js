@@ -5,7 +5,6 @@ import reviewRouter from './routes/review.route.js'
 import  dotenv  from "dotenv";
 import connectDB from "./db/mongodb.js";
 import bodyParser from "body-parser";
-import ServerlessHttp from "serverless-http";
 
 
 
@@ -55,22 +54,6 @@ app.get("/api/health", (req, res) => {
 
 
 
-connectDB()
-.then(()=>{
-    app.on("error",(error)=>{
-        console.log("Error : ",error);
-        throw error;
-       })
-
-    app.listen(process.env.PORT || 3000 , ()=>{
-        console.log(`Server is running on port ${process.env.PORT || 3000}`)
-    })
-})
-.catch((err)=>{
-    console.log("MongoDB connection failed !!",err)
-})
 
 
-
-// ✅ Export handler for Vercel
-module.exports = ServerlessHttp(app);
+export default app;
