@@ -4,7 +4,7 @@ import connectDB from "../src/db/mongodb.js";
 
 let isConnected = false;
 
-const handler = async (req, res) => {
+const setup = async () => {
   if (!isConnected) {
     try {
       await connectDB();
@@ -12,11 +12,13 @@ const handler = async (req, res) => {
       console.log("Connected to MongoDB (serverless)");
     } catch (err) {
       console.error("MongoDB connection failed:", err);
-      return res.status(500).json({ message: "MongoDB connection failed" });
+      // Don't throw yet — allow serverless handler to still exist
     }
   }
-
-  return serverless(app)(req, res);
 };
+
+await setup(); // Ensure DB is connected before handling requests
+
+const handler = serverless(app);
 
 export default handler;
